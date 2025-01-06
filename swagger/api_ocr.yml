@@ -1,0 +1,22 @@
+parameters:
+  - name: image
+    in: formData
+    type: file
+    required: true
+    description: 업로드할 이미지 파일
+responses:
+  200:
+    description: 성공
+    schema:
+      type: object
+      properties:
+        extracted_text:
+          type: string
+          description: 추출된 텍스트
+        gemini_result_text:
+          type: string
+          description: Gemini AI의 분석 결과
+  400:
+    description: 잘못된 요청
+  500:
+    description: 서버 오류

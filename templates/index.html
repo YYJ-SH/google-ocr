@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>이미지 OCR 서비스</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Noto Sans KR) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+    <!-- Tailwind Config -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Noto Sans KR"', 'sans-serif'],
+            },
+          },
+        }
+      }
+    </script>
+</head>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+    <div class="max-w-lg mx-auto py-8">
+        <h1 class="text-3xl text-center text-gray-800 font-bold mb-8">이미지에서 텍스트 추출하기</h1>
+        
+        {% if error %}
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                <strong class="font-bold">오류:</strong>
+                <span class="block sm:inline">{{ error }}</span>
+            </div>
+        {% endif %}
+        
+        {% if extracted_text %}
+            <h2 class="text-2xl text-gray-800 font-semibold mb-4">추출된 텍스트</h2>
+            <div class="bg-white p-4 rounded shadow-md mb-4">
+                <pre class="whitespace-pre-wrap">{{ extracted_text }}</pre>
+            </div>
+        {% endif %}
+        
+        {% if gemini_result_text %}
+            <h2 class="text-2xl text-gray-800 font-semibold mb-4">Gemini AI 분석 결과</h2>
+            <div class="bg-white p-4 rounded shadow-md mb-4">
+                <p>{{ gemini_result_text }}</p>
+            </div>
+        {% endif %}
+        
+        <form method="post" enctype="multipart/form-data" class="mt-8">
+            <div class="mb-4">
+                <label for="image" class="block text-gray-700 font-bold mb-2">이미지 파일 선택:</label>
+                <input type="file" id="image" name="image" accept="image/*" required class="block w-full text-gray-700 py-2 px-3 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                업로드 및 분석
+            </button>
+        </form>
+    </div>
+</body>
+</html>

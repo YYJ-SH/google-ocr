@@ -1,0 +1,56 @@
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #f8f9fa;
+}
+
+.container {
+    width: 60%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+.error {
+    color: red;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.result {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    padding: 15px;
+    margin-top: 20px;
+    white-space: pre-wrap;
+}
+
+form {
+    text-align: center;
+    margin-top: 30px;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+input[type="file"] {
+    display: block;
+    margin: 0 auto 20px auto;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
