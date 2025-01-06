@@ -31,6 +31,13 @@
             </div>
         {% endif %}
         
+        {% if uploaded_image %}
+            <h2 class="text-2xl text-gray-800 font-semibold mb-4">업로드한 이미지</h2>
+            <div class="mb-4">
+                <img src="{{ url_for('static', filename=uploaded_image) }}" alt="Uploaded Image" class="max-w-full h-auto mx-auto shadow-md">
+            </div>
+        {% endif %}
+        
         {% if extracted_text %}
             <h2 class="text-2xl text-gray-800 font-semibold mb-4">추출된 텍스트</h2>
             <div class="bg-white p-4 rounded shadow-md mb-4">
