@@ -186,3 +186,4 @@ your_project/
 - **Python 버전 요구 사항**: `google-generativeai` 패키지는 **Python 3.9 이상**을 필요로 합니다.
 - **사용량 제한 및 비용**: Google Cloud Vision API와 Google Generative AI는 사용량에 따라 비용이 발생할 수 있으므로, 사용 전에 각 서비스의 요금제를 확인하시기 바랍니다.
 - **이미지 저장소 관리**: 업로드된 이미지는 `static/uploads/` 폴더에 저장되며, 필요에 따라 적절한 시점에 삭제하는 로직을 추가해야 합니다.
+pip install Flask google-auth requests google-auth-oauthlib google-auth-httplib2 python-dotenv flasgger

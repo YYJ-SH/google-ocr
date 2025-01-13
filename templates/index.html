@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>이미지 OCR 서비스</title>
+    <title>이미지 OCR 및 URL 검사 서비스</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts (Noto Sans KR) -->
@@ -21,8 +21,8 @@
     </script>
 </head>
 <body class="bg-gray-100 font-sans leading-normal tracking-normal">
-    <div class="max-w-lg mx-auto py-8">
-        <h1 class="text-3xl text-center text-gray-800 font-bold mb-8">이미지에서 텍스트 추출하기</h1>
+    <div class="max-w-4xl mx-auto py-8 px-4">
+        <h1 class="text-3xl text-center text-gray-800 font-bold mb-8">이미지 OCR 및 URL 검사 서비스</h1>
         
         {% if error %}
             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -31,36 +31,109 @@
             </div>
         {% endif %}
         
-        {% if uploaded_image %}
-            <h2 class="text-2xl text-gray-800 font-semibold mb-4">업로드한 이미지</h2>
-            <div class="mb-4">
-                <img src="{{ url_for('static', filename=uploaded_image) }}" alt="Uploaded Image" class="max-w-full h-auto mx-auto shadow-md">
+        <!-- URL 검사 섹션 -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+            <h2 class="text-2xl text-gray-800 font-semibold mb-4">URL 안전성 검사</h2>
+            <form method="post" class="mb-4">
+                <div class="flex gap-4">
+                    <input type="text" name="url" placeholder="검사할 URL을 입력하세요" 
+                           class="flex-1 p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        검사하기
+                    </button>
+                </div>
+            </form>
+            
+            {% if url_check_result %}
+            <div class="mt-4 p-4 {% if url_check_result.is_malicious %}bg-red-50{% elif url_check_result.is_safe %}bg-green-50{% else %}bg-gray-50{% endif %} rounded">
+                <h3 class="font-semibold mb-2">검사 결과:</h3>
+                <div class="space-y-2">
+                    <p>URL: {{ url_check_result.checked_url }}</p>
+                    <p>상태: 
+                        {% if url_check_result.is_safe %}
+                            <span class="text-green-600 font-semibold">안전한 웹사이트</span>
+                        {% elif url_check_result.is_malicious %}
+                            <span class="text-red-600 font-semibold">위험한 웹사이트</span>
+                        {% else %}
+                            <span class="text-yellow-600 font-semibold">알 수 없음</span>
+                        {% endif %}
+                    </p>
+                    <p>카테고리: {{ url_check_result.category_description }}</p>
+                    {% if url_check_result.is_malicious %}
+                    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mt-2">
+                        <p class="font-bold">주의!</p>
+                        <p>이 웹사이트는 악성코드, 피싱 또는 사기의 위험이 있습니다. 접속하지 않는 것을 권장합니다.</p>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
         {% endif %}
         
-        {% if extracted_text %}
-            <h2 class="text-2xl text-gray-800 font-semibold mb-4">추출된 텍스트</h2>
-            <div class="bg-white p-4 rounded shadow-md mb-4">
-                <pre class="whitespace-pre-wrap">{{ extracted_text }}</pre>
-            </div>
-        {% endif %}
-        
-        {% if gemini_result_text %}
-            <h2 class="text-2xl text-gray-800 font-semibold mb-4">Gemini AI 분석 결과</h2>
-            <div class="bg-white p-4 rounded shadow-md mb-4">
-                <p>{{ gemini_result_text }}</p>
-            </div>
-        {% endif %}
-        
-        <form method="post" enctype="multipart/form-data" class="mt-8">
-            <div class="mb-4">
-                <label for="image" class="block text-gray-700 font-bold mb-2">이미지 파일 선택:</label>
-                <input type="file" id="image" name="image" accept="image/*" required class="block w-full text-gray-700 py-2 px-3 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
-            </div>
-            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                업로드 및 분석
-            </button>
-        </form>
+        <!-- 이미지 OCR 섹션 -->
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-2xl text-gray-800 font-semibold mb-4">이미지 텍스트 추출</h2>
+            
+            {% if uploaded_image %}
+                <h3 class="text-xl text-gray-800 font-semibold mb-4">업로드한 이미지</h3>
+                <div class="mb-6">
+                    <img src="{{ url_for('static', filename=uploaded_image) }}" alt="Uploaded Image" class="max-w-full h-auto mx-auto shadow-md rounded">
+                </div>
+            {% endif %}
+            
+            {% if extracted_text %}
+                <h3 class="text-xl text-gray-800 font-semibold mb-4">추출된 텍스트</h3>
+                <div class="bg-gray-50 p-4 rounded shadow-sm mb-6">
+                    <pre class="whitespace-pre-wrap">{{ extracted_text }}</pre>
+                </div>
+            {% endif %}
+            
+            {% if gemini_result_text %}
+                <h3 class="text-xl text-gray-800 font-semibold mb-4">Gemini AI 분석 결과</h3>
+                <div class="bg-gray-50 p-4 rounded shadow-sm mb-6">
+                    <pre class="whitespace-pre-wrap">{{ gemini_result_text }}</pre>
+                </div>
+            {% endif %}
+            
+            <form method="post" enctype="multipart/form-data" class="mt-8">
+                <div class="mb-4">
+                    <label for="image" class="block text-gray-700 font-bold mb-2">이미지 파일 선택:</label>
+                    <input type="file" id="image" name="image" accept="image/*" required 
+                           class="block w-full text-gray-700 py-2 px-3 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <!-- 이미지 미리보기 영역 -->
+                <div id="preview-container" class="hidden mb-4">
+                    <h3 class="text-xl text-gray-800 font-semibold mb-4">이미지 미리보기</h3>
+                    <img id="preview-image" src="#" alt="Image Preview" class="max-w-full h-auto mx-auto shadow-md rounded">
+                </div>
+                <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    업로드 및 분석
+                </button>
+            </form>
+        </div>
     </div>
+
+    <!-- 이미지 미리보기 스크립트 -->
+    <script>
+        const imageInput = document.getElementById('image');
+        const previewContainer = document.getElementById('preview-container');
+        const previewImage = document.getElementById('preview-image');
+
+        imageInput.addEventListener('change', function() {
+            const file = this.files[0];
+            
+            if (file) {
+                const reader = new FileReader();
+
+                reader.addEventListener('load', function() {
+                    previewImage.setAttribute('src', this.result);
+                    previewContainer.classList.remove('hidden');
+                });
+
+                reader.readAsDataURL(file);
+            } else {
+                previewContainer.classList.add('hidden');
+            }
+        });
+    </script>
 </body>
 </html>
